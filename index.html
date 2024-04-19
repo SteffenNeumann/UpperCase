@@ -1,87 +1,81 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>Clipboard Formatter</title>
-  
-  <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-</head>
+	<head>
+		<title>Clipboard Formatter</title>
 
-<body>
+		<!-- Bootstrap CSS -->
+		<link
+			rel="stylesheet"
+			href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+	</head>
 
-  <div class="container mt-5">
+	<body>
+		<div class="container mt-5">
+			<h1 class="display-4 text-center">Clipboard Formatter</h1>
 
-    <h1 class="display-4 text-center">Clipboard Formatter</h1>
+			<p class="text-center text-secondary">
+				This program allows you to format the text in your clipboard by
+				converting it to Upper CamelCase, lower camelCase, UPPERCASE or
+				lowercase.
+			</p>
 
-    <p class="text-center text-secondary">
-      This program allows you to format the text in your clipboard by converting it to Upper CamelCase, lower camelCase, UPPERCASE or lowercase.
-    </p>
+			<div class="d-flex justify-content-center">
+				<div class="btn-group">
+					<button class="btn btn-outline-primary" id="upperCamel">
+						Upper CamelCase
+					</button>
+					<button class="btn btn-outline-primary" id="lowerCamel">
+						lower camelCase
+					</button>
+					<button class="btn btn-outline-primary" id="upper">UPPERCASE</button>
+					<button class="btn btn-outline-primary" id="lower">lowercase</button>
+				</div>
+			</div>
+		</div>
 
-    <div class="d-flex justify-content-center">
-    
-      <div class="btn-group">
-        <button class="btn btn-outline-primary" id="upperCamel">Upper CamelCase</button>
-        <button class="btn btn-outline-primary" id="lowerCamel">lower camelCase</button>
-        <button class="btn btn-outline-primary" id="upper">UPPERCASE</button>
-        <button class="btn btn-outline-primary" id="lower">lowercase</button>
-      </div>
+		<!-- Bootstrap JS -->
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 
-    </div>
+		<script>
+			const buttons = document.querySelectorAll(".btn");
 
-  </div>
+			buttons.forEach((button) => {
+				button.addEventListener("click", () => {
+					const value = button.id;
 
-  <!-- Bootstrap JS -->
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+					navigator.clipboard.readText().then((text) => {
+						let formatted;
 
-  <script>
+						if (value === "upperCamel") {
+							formatted = toCamelCase(text, true);
+						} else if (value === "lowerCamel") {
+							formatted = toCamelCase(text, false);
+						} else if (value === "upper") {
+							formatted = text.toUpperCase();
+						} else {
+							formatted = text.toLowerCase();
+						}
 
-    const buttons = document.querySelectorAll('.btn');
-
-    buttons.forEach(button => {
-      button.addEventListener('click', () => {
-        const value = button.id;
-
-				navigator.clipboard.readText()
-				.then(text => {
-					let formatted;
-					
-					if (value === 'upperCamel') {
-						formatted = toCamelCase(text, true);
-					} else if (value === 'lowerCamel') {
-						formatted = toCamelCase(text, false);
-					} else if (value === 'upper') {
-						formatted = text.toUpperCase();   
-					} else {
-						formatted = text.toLowerCase();
-					}
-
-					navigator.clipboard.writeText(formatted);
+						navigator.clipboard.writeText(formatted);
+					});
 				});
-        
-      });
-    });
+			});
 
-       function toCamelCase(text, upper) {
-      let formatted = text;
+			function toCamelCase(text, upper) {
+				let formatted = text;
 
-      if (upper) {
-        formatted = formatted.replace(/^\w/, c => c.toUpperCase());
-      } else {
-        formatted = formatted.replace(/^\w/, c => c.toLowerCase());
-      }
+				// Erstes Wort konvertieren
+				formatted = formatted.replace(/^\w/, (match) => {
+					return upper ? match.toUpperCase() : match.toLowerCase();
+				});
 
-      formatted = formatted.replace(/\s+(\w)/g, (match, letter) => {
-        if (upper) {
-          return letter.toUpperCase();
-        } else {
-          return letter.toLowerCase();  
-        }
-      });
+				// Leerzeichen konvertieren
+				formatted = formatted.replace(/\b (\w)/g, (match) => {
+					return upper ? match.toUpperCase() : match.toLowerCase();
+				});
 
-      return formatted;
-    }
-
-  </script>
-
-</body>
+				return formatted;
+			}
+		</script>
+	</body>
 </html>
