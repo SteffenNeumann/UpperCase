@@ -21,11 +21,11 @@
 
 			<div class="d-flex justify-content-center">
 				<div class="btn-group">
-					<button class="btn btn-outline-primary" id="upperCamel">
-						Upper CamelCase
+					<button class="btn btn-outline-primary" id="camelCase">
+						CamelCase
 					</button>
-					<button class="btn btn-outline-primary" id="lowerCamel">
-						lower camelCase
+					<button class="btn btn-outline-primary" id="TitelCase">
+						TitelCase
 					</button>
 					<button class="btn btn-outline-primary" id="upper">UPPERCASE</button>
 					<button class="btn btn-outline-primary" id="lower">lowercase</button>
@@ -46,10 +46,10 @@
 					navigator.clipboard.readText().then((text) => {
 						let formatted;
 
-						if (value === "upperCamel") {
-							formatted = toCamelCase(text, true);
-						} else if (value === "lowerCamel") {
-							formatted = toCamelCase(text, false);
+						if (value === "camelCase") {
+							formatted = camelCase(text);
+						} else if (value === "TitelCase") {
+							formatted = titleCase(text);
 						} else if (value === "upper") {
 							formatted = text.toUpperCase();
 						} else {
@@ -60,22 +60,22 @@
 					});
 				});
 			});
-
-			function toCamelCase(text, upper) {
-				let formatted = text;
-
-				// Erstes Wort konvertieren
-				formatted = formatted.replace(/^\w/, (match) => {
-					return upper ? match.toUpperCase() : match.toLowerCase();
-				});
-
-				// Leerzeichen konvertieren
-				formatted = formatted.replace(/\b (\w)/g, (match) => {
-					return upper ? match.toUpperCase() : match.toLowerCase();
-				});
-
-				return formatted;
+			function camelCase(str) {
+				// Using replace method with regEx
+				return str
+					.replace(/(?:^\w|[A-Z]|\b\w)/g, function (word, index) {
+						return index == 0 ? word.toLowerCase() : word.toUpperCase();
+					})
+					.replace(/\s+/g, "");
+			}
+			function titleCase(str) {
+				str = str.toLowerCase().split(" ");
+				for (let i = 0; i < str.length; i++) {
+					str[i] = str[i].charAt(0).toUpperCase() + str[i].slice(1);
+				}
+				return str.join(" ");
 			}
 		</script>
 	</body>
 </html>
+w
